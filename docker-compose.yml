@@ -1,0 +1,65 @@
+version: '3'
+services:
+  app:
+    build: ./.docker/
+    container_name: ${DC_APP_NAME:-app}
+    tty: true
+    volumes:
+      - .:/var/www/html
+    networks:
+      - sendportal-net
+    depends_on:
+      db: 
+        condition: service_healthy
+  web:
+    build: .docker/nginx/
+    container_name: ${DC_WEB_NAME:-web}
+    tty: true
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "${DC_WEB_PORT:-80}:80"
+    networks:
+      - sendportal-net
+    depends_on:
+      - app
+  db:
+    image: mariadb:10.3
+    container_name: ${DC_DB_NAME:-db}
+    tty: true
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
+      - "MYSQL_DATABASE=local"
+      - "MYSQL_USER=root"
+    volumes:
+      - "dbdata:/var/lib/mysql"
+    ports:
+      - "${DC_DB_PORT:-3306}:3306"
+    command: "--innodb_use_native_aio=0"
+    healthcheck:
+      test: '/usr/bin/mysql --user=root --database=local --execute="SHOW DATABASES;"'
+    networks:
+      - sendportal-net
+  dbtest:
+    container_name: ${DC_DB_TEST_NAME:-dbtest}
+    image: mariadb:10.3
+    tmpfs: /var/lib/mysql
+    environment:
+      - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
+      - "MYSQL_DATABASE=testing"
+      - "MYSQL_USER=root"
+    networks:
+      - sendportal-net
+  redis:
+    image: redis:alpine
+    container_name: ${DC_REDIS_NAME:-redis}
+    expose:
+      - 6379
+    networks:
+      - sendportal-net
+networks: 
+  sendportal-net:
+    driver: bridge
+volumes:
+  "dbdata":
+    driver: local
