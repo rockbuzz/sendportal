@@ -7,7 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Sendportal\Base\Facades\Sendportal;
 use App\Models\{Workspace, ApiToken, User};
-use Sendportal\Base\Models\{Subscriber, Tag};
+use Sendportal\Base\Models\{Subscriber, Tag, Campaign};
 
 class DatabaseSeeder extends Seeder
 {
@@ -41,5 +41,7 @@ class DatabaseSeeder extends Seeder
                 $subscriber->tags()->attach($tag);
             });
         });
+
+        Campaign::factory()->count(10)->create();
     }
 }
