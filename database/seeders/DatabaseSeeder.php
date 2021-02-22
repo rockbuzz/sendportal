@@ -29,19 +29,23 @@ class DatabaseSeeder extends Seeder
         $user->update(['current_workspace_id' => $workspace->id]);
         auth()->login($user);
         ApiToken::factory()->create([
-            'workspace_id' => Sendportal::currentWorkspaceId()
+            'workspace_id' => $workspace->id,
+            'api_token' => 'oRVdaoQvlInKeeuZNnrwbOIIIOkGIPPQ'
         ]);
     
-        Tag::factory()->count(10)->create([
-            'workspace_id' => Sendportal::currentWorkspaceId()
-        ])->each(function ($tag) {
-            Subscriber::factory()->count(rand(30, 60))->create([
-                'workspace_id' => Sendportal::currentWorkspaceId()
-            ])->each(function ($subscriber) use ($tag) {
+        $tags = Tag::factory()->count(10)->create()->each(function ($tag) {
+            Subscriber::factory()->count(rand(30, 60))
+                ->create()
+                ->each(function ($subscriber) use ($tag) {
                 $subscriber->tags()->attach($tag);
             });
         });
 
-        Campaign::factory()->count(10)->create();
+        Campaign::factory()->count(10)->create([
+            'from_name' => config('mail.from.name'),
+            'from_email' => config('mail.from.address')
+        ])->each(function ($campaign) use ($tags) {
+            $campaign->tags()->attach($tags->random(rand(1,3)));
+        });
     }
 }
