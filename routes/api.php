@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\RequireWorkspace;
 use Illuminate\Support\Facades\Route;
 use Sendportal\Base\Facades\Sendportal;
+use App\Http\Middleware\RequireWorkspace;
 
 Route::middleware([
     config('sendportal-host.throttle_middleware'),
@@ -13,6 +13,11 @@ Route::middleware([
 
     // Auth'd API routes (workspace-level auth!).
     Sendportal::apiRoutes();
+
+    Route::get(
+        'v1/all-tags', 
+        'Api\TagController@index'
+    )->name('api.all-tags');
 
 });
 
