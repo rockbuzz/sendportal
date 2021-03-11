@@ -17,3 +17,4 @@ public/vendor/
 resources/lang/vendor/
 resources/views/vendor/
 composer.lock
+package-lock.json
