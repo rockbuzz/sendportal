@@ -1,5 +1,6 @@
 <p align="center"><img src="https://sendportal.io/img/sendportal.png" width="250"></p>
 
+<p><img src="https://github.com/rockbuzz/sendportal/actions/workflows/ci.yaml/badge.svg"/></p>
 
 Modern open-source self-hosted email marketing.
 
