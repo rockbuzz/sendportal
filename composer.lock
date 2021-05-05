@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49ac89f5d2ccf891646f82d550e1a05e",
+    "content-hash": "a1f68e3ea5b81682866fb0406d082427",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4192,6 +4192,65 @@
                 "source": "https://github.com/rap2hpoutre/fast-excel/tree/v2.5.0"
             },
             "time": "2021-02-22T07:16:09+00:00"
+        },
+        {
+            "name": "rockbuzz/lara-custom-command",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rockbuzz/lara-custom-command.git",
+                "reference": "d9313be0a02780b1fe77ee3a0e16a673f2d96c3d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rockbuzz/lara-custom-command/zipball/d9313be0a02780b1fe77ee3a0e16a673f2d96c3d",
+                "reference": "d9313be0a02780b1fe77ee3a0e16a673f2d96c3d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Rockbuzz\\LaraCustomCommand\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Rockbuzz\\LaraCustomCommand\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TiagoDevWeb",
+                    "email": "tiago@rockbuzz.com.br"
+                },
+                {
+                    "name": "Paulo Henrique P. Scheuermann",
+                    "email": "paulo@rockbuzz.com.br"
+                }
+            ],
+            "description": "Laravel custom command",
+            "keywords": [
+                "command",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/rockbuzz/lara-custom-command/issues",
+                "source": "https://github.com/rockbuzz/lara-custom-command/tree/1.0.2"
+            },
+            "time": "2021-01-22T12:25:29+00:00"
         },
         {
             "name": "sendgrid/php-http-client",
