@@ -14,11 +14,20 @@ Route::middleware([
     // Auth'd API routes (workspace-level auth!).
     Sendportal::apiRoutes();
 
-    Route::get(
-        'v1/all-tags', 
-        'Api\TagController@index'
-    )->name('api.all-tags');
+    Route::get('v1/all-tags', 'Api\TagController@index')->name('api.all-tags');
 
+    Route::get('v1/campaigns/{id}/report', 'Api\CampaignReportsController@index')
+        ->name('api.compaigns.reports.index');
+    Route::get('v1/campaigns/{id}/report/recipients', 'Api\CampaignReportsController@recipients')
+        ->name('api.compaigns.reports.recipients');
+    Route::get('v1/campaigns/{id}/report/opens', 'Api\CampaignReportsController@opens')
+        ->name('api.compaigns.reports.opens');
+    Route::get('v1/campaigns/{id}/report/clicks', 'Api\CampaignReportsController@clicks')
+        ->name('api.compaigns.reports.clicks');
+    Route::get('v1/campaigns/{id}/report/unsubscribes', 'Api\CampaignReportsController@unsubscribes')
+        ->name('api.compaigns.reports.unsubscribes');
+    Route::get('v1/campaigns/{id}/report/bounces', 'Api\CampaignReportsController@bounces')
+        ->name('api.compaigns.reports.bounces');
 });
 
 // Non-auth'd API routes.
