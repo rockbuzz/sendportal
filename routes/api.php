@@ -24,10 +24,10 @@ Route::middleware([
         ->name('api.compaigns.reports.opens');
     Route::get('v1/campaigns/{id}/report/clicks', 'Api\CampaignReportsController@clicks')
         ->name('api.compaigns.reports.clicks');
-    Route::get('v1/campaigns/{id}/report/unsubscribes', 'Api\CampaignReportsController@unsubscribes')
-        ->name('api.compaigns.reports.unsubscribes');
     Route::get('v1/campaigns/{id}/report/bounces', 'Api\CampaignReportsController@bounces')
         ->name('api.compaigns.reports.bounces');
+    Route::get('v1/campaigns/{id}/report/unsubscribes', 'Api\CampaignReportsController@unsubscribes')
+        ->name('api.compaigns.reports.unsubscribes');
 });
 
 // Non-auth'd API routes.

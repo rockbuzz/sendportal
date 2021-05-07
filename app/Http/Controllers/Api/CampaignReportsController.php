@@ -42,13 +42,7 @@ class CampaignReportsController extends Controller
     {
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $presenter = new CampaignReportPresenter($campaign, Sendportal::currentWorkspaceId(), (int) $request->get('interval', 24));
         $presenterData = $presenter->generate();
@@ -61,7 +55,7 @@ class CampaignReportsController extends Controller
             'chartData' => json_encode(Arr::get($presenterData['chartData'], 'data', [])),
         ];
 
-        return view('sendportal::campaigns.reports.index', $data);
+        return response()->json(['data' => $data]);
     }
 
     /**
@@ -74,17 +68,16 @@ class CampaignReportsController extends Controller
     {
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $messages = $this->messageRepo->recipients(Sendportal::currentWorkspaceId(), Campaign::class, $id);
 
-        return view('sendportal::campaigns.reports.recipients', compact('campaign', 'messages'));
+        return response()->json([
+            'data' => [
+                'campaign' => $campaign,
+                'messages' => $messages
+            ]
+        ]);
     }
 
     /**
@@ -98,17 +91,17 @@ class CampaignReportsController extends Controller
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
         $averageTimeToOpen = $this->campaignRepo->getAverageTimeToOpen($campaign);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $messages = $this->messageRepo->opens(Sendportal::currentWorkspaceId(), Campaign::class, $id);
 
-        return view('sendportal::campaigns.reports.opens', compact('campaign', 'messages', 'averageTimeToOpen'));
+        return response()->json([
+            'data' => [
+                'campaign' => $campaign,
+                'messages' => $messages,
+                'averageTimeToOpen' => $averageTimeToOpen
+            ]
+        ]);
     }
 
     /**
@@ -122,17 +115,17 @@ class CampaignReportsController extends Controller
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
         $averageTimeToClick = $this->campaignRepo->getAverageTimeToClick($campaign);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $messages = $this->messageRepo->clicks(Sendportal::currentWorkspaceId(), Campaign::class, $id);
 
-        return view('sendportal::campaigns.reports.clicks', compact('campaign', 'messages', 'averageTimeToClick'));
+        return response()->json([
+            'data' => [
+                'campaign' => $campaign,
+                'messages' => $messages,
+                'averageTimeToClick' => $averageTimeToClick
+            ]
+        ]);
     }
 
     /**
@@ -145,17 +138,16 @@ class CampaignReportsController extends Controller
     {
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $messages = $this->messageRepo->bounces(Sendportal::currentWorkspaceId(), Campaign::class, $id);
 
-        return view('sendportal::campaigns.reports.bounces', compact('campaign', 'messages'));
+        return response()->json([
+            'data' => [
+                'campaign' => $campaign,
+                'messages' => $messages
+            ]
+        ]);
     }
 
     /**
@@ -168,16 +160,26 @@ class CampaignReportsController extends Controller
     {
         $campaign = $this->campaignRepo->find(Sendportal::currentWorkspaceId(), $id);
 
-        if ($campaign->draft) {
-            return redirect()->route('sendportal.campaigns.edit', $id);
-        }
-
-        if ($campaign->queued || $campaign->sending) {
-            return redirect()->route('sendportal.campaigns.status', $id);
-        }
+        $this->statusCheck($campaign);
 
         $messages = $this->messageRepo->unsubscribes(Sendportal::currentWorkspaceId(), Campaign::class, $id);
 
-        return view('sendportal::campaigns.reports.unsubscribes', compact('campaign', 'messages'));
+        return response()->json([
+            'data' => [
+                'campaign' => $campaign,
+                'messages' => $messages
+            ]
+        ]);
+    }
+
+    private function statusCheck(Campaign $campaign)
+    {
+        if ($campaign->draft) {
+            return response()->json(['message' => 'Campaign is draft'], 401);
+        }
+
+        if ($campaign->queued || $campaign->sending) {
+            return response()->json(['message' => 'Campaign is queued or sending'], 401);
+        }
     }
 }
