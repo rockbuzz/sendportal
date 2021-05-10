@@ -9,12 +9,14 @@ use App\Http\Middleware\RequireWorkspace;
 Route::middleware([
     config('sendportal-host.throttle_middleware'),
     RequireWorkspace::class
-])->group(function() {
+])->group(function () {
 
     // Auth'd API routes (workspace-level auth!).
     Sendportal::apiRoutes();
 
     Route::get('v1/all-tags', 'Api\TagController@index')->name('api.all-tags');
+    Route::get('v1/tags/{tag}', 'Api\TagController@show')->name('api.tags.show');
+    Route::get('v1/tags/{tag}/subscribers', 'Api\TagController@subscribers')->name('api.tags.subscribers');
 
     Route::get('v1/campaigns/{id}/report', 'Api\CampaignReportsController@index')
         ->name('api.compaigns.reports.index');
