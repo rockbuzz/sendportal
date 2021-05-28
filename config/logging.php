@@ -35,6 +35,11 @@ return [
     */
 
     'channels' => [
+        'server_stack' => [
+            'driver' => 'stack',
+            'channels' => ['papertrail', 'slack']
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
@@ -64,12 +69,13 @@ return [
 
         'papertrail' => [
             'driver' => 'monolog',
-            'level' => 'debug',
+            'level' => env('LOG_PAPERTRAIL_LEVEL', 'debug'),
             'handler' => SyslogUdpHandler::class,
+            'tap' => [App\Logging\CustomizeFormatter::class],
             'handler_with' => [
-                'host' => env('PAPERTRAIL_URL'),
-                'port' => env('PAPERTRAIL_PORT'),
-            ],
+                'host' => env('LOG_PAPERTRAIL_URL'),
+                'port' => env('LOG_PAPERTRAIL_PORT')
+            ]
         ],
 
         'stderr' => [
